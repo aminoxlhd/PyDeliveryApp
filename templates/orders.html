@@ -1,0 +1,16 @@
+<!-- templates/orders.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>طلباتي</title>
+</head>
+<body>
+    <h1>قائمة الطلبات</h1>
+    <ul>
+        {% for order in orders %}
+            <li>الطبق: {{ order.items }} - الثمن: {{ order.total_price }} - الحالة: {{ order.status }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- templates/restaurants.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>المطاعم</title>
+</head>
+<body>
+    <h1>قائمة المطاعم</h1>
+    <ul>
+        {% for restaurant in restaurants %}
+            <li>{{ restaurant.name }} - {{ restaurant.address }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

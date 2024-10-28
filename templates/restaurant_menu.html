@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ restaurant.name }} - PyDeliveryApp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>{{ restaurant.name }}</h1>
+    <p>{{ restaurant.address }}</p>
+    <a href="{{ url_for('home') }}">العودة للصفحة الرئيسية</a>
+
+    <h2>القائمة:</h2>
+    <ul>
+        {% for item in menu_items %}
+            <li>
+                {{ item.name }} - ${{ item.price }}
+                <form action="{{ url_for('order', menu_item_id=item.id) }}" method="POST" style="display:inline;">
+                    {{ form.hidden_tag() }}
+                    {{ form.submit() }}
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

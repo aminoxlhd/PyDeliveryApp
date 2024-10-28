@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>PyDeliveryApp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Welcom to PyDeliveryApp</h1>
+    <h1>مرحبا بك فـ PyDeliveryApp!</h1>
+    {% if current_user.is_authenticated %}
+        <p>مرحبا {{ current_user.username }}! <a href="{{ url_for('logout') }}">تسجيل الخروج</a></p>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">تسجيل الدخول</a> | <a href="{{ url_for('register') }}">تسجيل حساب جديد</a></p>
+    {% endif %}
+
+    <h2>المطاعم المتاحة:</h2>
+    <ul>
+        {% for restaurant in restaurants %}
+            <li><a href="{{ url_for('restaurant_menu', restaurant_id=restaurant.id) }}">{{ restaurant.name }}</a></li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
+
