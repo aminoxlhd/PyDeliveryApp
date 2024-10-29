@@ -2,8 +2,8 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from models import User, Restaurant, MenuItem, Order
-from forms import RegistrationForm, LoginForm
+from models import User, Restaurant, MenuItem, Order, Review
+from forms import RegistrationForm, LoginForm, Review
 from forms import OrderForm
 from extensions import db, migrate, login_manager
 import os
@@ -129,6 +129,34 @@ def add_to_order(menu_item_id):
 def view_orders():
     orders = Order.query.filter_by(user_id=current_user.id).all()
     return render_template('orders.html', orders=orders)
+
+
+@app.route('/restaurant/<int:restaurant_id>/review', methods=['GET', 'POST'])
+@login_required
+def add_review(restaurant_id):
+    form = ReviewForm()
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+
+    if form.validate_on_submit():
+        review = Review(
+            rating=form.rating.data,
+            comment=form.comment.data,
+            user_id=current_user.id,
+            restaurant_id=restaurant_id
+        )
+        db.session.add(review)
+        db.session.commit()
+        flash('تمت إضافة تقييمك بنجاح!', 'success')
+        return redirect(url_for('view_restaurants'))
+
+    return render_template('add_review.html', form=form, restaurant=restaurant)
+
+
+@app.route('/restaurants', methods=['GET'])
+def view_restaurants():
+    restaurants = Restaurant.query.all()
+    reviews = Review.query.all()
+    return render_template('restaurants.html', restaurants=restaurants, reviews=reviews)
 
 
 if __name__ == '__main__':
