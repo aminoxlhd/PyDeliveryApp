@@ -4,23 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <title>قائمة الأطباق - {{ restaurant.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .menu-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .menu-item h2 {
+            color: #007bff;
+        }
+        .review-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .review-item {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .add-review-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #28a745;
+            text-decoration: none;
+        }
+        .add-review-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>قائمة الأطباق في {{ restaurant.name }}</h1>
 
     {% for menu_item in menu_items %}
-        <div>
+        <div class="menu-item">
             <h2>{{ menu_item.name }}</h2>
             <p>الثمن: {{ menu_item.price }} درهم</p>
 
             <!-- رابط إضافة تقييم جديد -->
-            <a href="{{ url_for('add_dish_review', menu_item_id=menu_item.id) }}">إضافة تقييم</a>
+            <a href="{{ url_for('add_dish_review', menu_item_id=menu_item.id) }}" class="add-review-link">إضافة تقييم</a>
 
             <!-- عرض التقييمات للطبق -->
             <h3>التقييمات:</h3>
-            <ul>
+            <ul class="review-list">
                 {% for review in reviews[menu_item.id] %}
-                    <li>{{ review.rating }} نجوم - {{ review.comment }} ({{ review.date_posted.strftime('%Y-%m-%d') }})</li>
+                    <li class="review-item">
+                        {{ review.rating }} نجوم - {{ review.comment }} ({{ review.date_posted.strftime('%Y-%m-%d') }})
+                    </li>
                 {% endfor %}
             </ul>
         </div>
