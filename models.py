@@ -35,10 +35,11 @@ class Order(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
     items = db.Column(db.String(500), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), nullable=False, default='Pending')
+    status = db.Column(db.String(50), nullable=False, default='في الانتظار')
 
     def __repr__(self):
-        return f'<Order {self.id}>'
+        return f'<Order {self.id} - Status: {self.status}>'
+
 
 
 class Review(db.Model):
@@ -52,3 +53,14 @@ class Review(db.Model):
     def __repr__(self):
         return f'<Review {self.rating} stars for restaurant {self.restaurant_id}>'
 
+
+class DishReview(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    menu_item_id = db.Column(db.Integer, db.ForeignKey('menu_item.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(500))
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<DishReview {self.rating} stars for menu item {self.menu_item_id}>'

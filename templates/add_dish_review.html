@@ -1,0 +1,23 @@
+<!-- templates/add_dish_review.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>إضافة تقييم للطبق</title>
+</head>
+<body>
+    <h1>تقييم طبق {{ menu_item.name }}</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.rating.label }}<br>
+            {{ form.rating(size=20) }}
+        </p>
+        <p>
+            {{ form.comment.label }}<br>
+            {{ form.comment(rows=5, cols=40) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+</html>

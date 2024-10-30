@@ -9,7 +9,21 @@
     <h1>قائمة الطلبات</h1>
     <ul>
         {% for order in orders %}
-            <li>الطبق: {{ order.items }} - الثمن: {{ order.total_price }} - الحالة: {{ order.status }}</li>
+            <li>
+                <p>الطبق: {{ order.items }}</p>
+                <p>الثمن: {{ order.total_price }} درهم</p>
+                <p>الحالة الحالية: {{ order.status }}</p>
+
+                <!-- نموذج لتحديث الحالة -->
+                <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
+                    <select name="status">
+                        <option value="في الانتظار">في الانتظار</option>
+                        <option value="قيد التحضير">قيد التحضير</option>
+                        <option value="تم التوصيل">تم التوصيل</option>
+                    </select>
+                    <button type="submit">تحديث الحالة</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 </body>
