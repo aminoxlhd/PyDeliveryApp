@@ -3,13 +3,29 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>المطاعم</title>
+    <title>قائمة المطاعم</title>
 </head>
 <body>
     <h1>قائمة المطاعم</h1>
     <ul>
         {% for restaurant in restaurants %}
-            <li>{{ restaurant.name }} - {{ restaurant.address }}</li>
+            <li>
+                <h2>{{ restaurant.name }}</h2>
+                <p>العنوان: {{ restaurant.address }}</p>
+
+                <!-- عرض التقييمات لهذا المطعم -->
+                <h3>التقييمات:</h3>
+                <ul>
+                    {% for review in reviews %}
+                        {% if review.restaurant_id == restaurant.id %}
+                            <li>{{ review.rating }} نجوم - {{ review.comment }} ({{ review.date_posted.strftime('%Y-%m-%d') }})</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+                <!-- رابط لإضافة تقييم جديد -->
+                <a href="{{ url_for('add_review', restaurant_id=restaurant.id) }}">إضافة تقييم</a>
+            </li>
         {% endfor %}
     </ul>
 </body>

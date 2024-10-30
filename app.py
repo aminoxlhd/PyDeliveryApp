@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import User, Restaurant, MenuItem, Order, Review
-from forms import RegistrationForm, LoginForm, Review
+from forms import RegistrationForm, LoginForm, ReviewForm
 from forms import OrderForm
 from extensions import db, migrate, login_manager
 import os
@@ -100,12 +100,6 @@ def order(menu_item_id):
 def orders():
     user_orders = Order.query.filter_by(user_id=current_user.id).all()
     return render_template('orders.html', orders=user_orders)
-
-
-@app.route('/restaurants', methods=['GET'])
-def view_restaurants():
-    restaurants = Restaurant.query.all()
-    return render_template('restaurants.html', restaurants=restaurants)
 
 
 @app.route('/add_to_order/<int:menu_item_id>', methods=['POST'])
