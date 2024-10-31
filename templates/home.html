@@ -6,15 +6,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- مربع البحث -->
+    <!-- نموذج البحث مع خيارات التصفية -->
     <form action="{{ url_for('search') }}" method="get">
         <input type="text" name="query" placeholder="ابحث عن طبق أو مطعم">
+
+        <!-- إضافة خيارات التصفية -->
+        <select name="sort_by">
+            <option value="name">الاسم</option>
+            <option value="price">السعر</option>
+            <option value="rating">التقييم</option>
+        </select>
+
         <button type="submit">بحث</button>
     </form>
 
     <h1>مرحبا بك فـ PyDeliveryApp!</h1>
-
-    <!-- عرض عدد التنبيهات بجانب اسم المستخدم -->
     {% if current_user.is_authenticated %}
         <p>مرحبا {{ current_user.username }}!
             <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
@@ -32,4 +38,3 @@
     </ul>
 </body>
 </html>
-

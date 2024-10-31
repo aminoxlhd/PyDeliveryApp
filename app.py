@@ -242,9 +242,18 @@ def delete_review(review_id):
 @app.route('/search')
 def search():
     query = request.args.get('query', '')
-    menu_items = MenuItem.query.filter(MenuItem.name.contains(query)).all()
+    sort_by = request.args.get('sort_by', 'name')
+
+    if sort_by == 'price':
+        menu_items = MenuItem.query.filter(MenuItem.name.contains(query)).order_by(MenuItem.price).all()
+    elif sort_by == 'rating':
+        menu_items = MenuItem.query.filter(MenuItem.name.contains(query)).order_by(MenuItem.rating.desc()).all()
+    else:
+        menu_items = MenuItem.query.filter(MenuItem.name.contains(query)).order_by(MenuItem.name).all()
+
     restaurants = Restaurant.query.filter(Restaurant.name.contains(query)).all()
-    return render_template('search_results.html', menu_items=menu_items, restaurants=restaurants, query=query)
+    return render_template('search_results.html', menu_items=menu_items, restaurants=restaurants, query=query, sort_by=sort_by)
+
 
 
 @app.context_processor

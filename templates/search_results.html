@@ -1,17 +1,29 @@
-<!-- templates/search_results.html -->
 <!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>نتائج البحث</title>
+    <title>نتائج البحث عن "{{ query }}"</title>
 </head>
 <body>
     <h1>نتائج البحث عن "{{ query }}"</h1>
 
+    <!-- عرض طريقة الترتيب حسب الخيار المختار -->
+    <h2>مرتبة حسب:
+        {% if sort_by == 'name' %}
+            الاسم
+        {% elif sort_by == 'price' %}
+            السعر
+        {% elif sort_by == 'rating' %}
+            التقييم
+        {% else %}
+            الاسم
+        {% endif %}
+    </h2>
+
     <h2>الأطباق</h2>
     <ul>
         {% for item in menu_items %}
-            <li>{{ item.name }} - {{ item.price }} درهم</li>
+            <li>{{ item.name }} - {{ item.price }} درهم - تقييم: {{ item.rating }} نجوم</li>
         {% endfor %}
     </ul>
 
