@@ -13,8 +13,13 @@
     </form>
 
     <h1>مرحبا بك فـ PyDeliveryApp!</h1>
+
+    <!-- عرض عدد التنبيهات بجانب اسم المستخدم -->
     {% if current_user.is_authenticated %}
-        <p>مرحبا {{ current_user.username }}! <a href="{{ url_for('logout') }}">تسجيل الخروج</a></p>
+        <p>مرحبا {{ current_user.username }}!
+            <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
+            | <a href="{{ url_for('notifications') }}">التنبيهات ({{ unread_notifications }})</a>
+        </p>
     {% else %}
         <p><a href="{{ url_for('login') }}">تسجيل الدخول</a> | <a href="{{ url_for('register') }}">تسجيل حساب جديد</a></p>
     {% endif %}

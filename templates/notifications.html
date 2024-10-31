@@ -1,4 +1,3 @@
-<!-- templates/notifications.html -->
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -7,10 +6,34 @@
 </head>
 <body>
     <h1>التنبيهات</h1>
-    <ul>
-        {% for notification in notifications %}
-            <li>{{ notification.message }} - {{ notification.timestamp.strftime('%Y-%m-%d %H:%M') }}</li>
-        {% endfor %}
+
+    <!-- قسم عرض التنبيهات -->
+    <ul id="notifications">
+        <!-- سيتم ملء هذا القسم بالتنبيهات غير المقروءة عبر AJAX -->
     </ul>
+
+    <!-- كود الجافاسكريبت لجلب التنبيهات الفورية -->
+    <script>
+        function fetchNotifications() {
+            fetch('/unread_notifications')
+                .then(response => response.json())
+                .then(data => {
+                    let notificationsContainer = document.getElementById('notifications');
+                    notificationsContainer.innerHTML = '';
+
+                    data.forEach(notification => {
+                        let item = document.createElement('li');
+                        item.textContent = `${notification.message} - ${notification.timestamp}`;
+                        notificationsContainer.appendChild(item);
+                    });
+                });
+        }
+
+        // جلب التنبيهات كل 30 ثانية
+        setInterval(fetchNotifications, 30000);
+
+        // استدعاء التنبيهات عند تحميل الصفحة مباشرة
+        fetchNotifications();
+    </script>
 </body>
 </html>

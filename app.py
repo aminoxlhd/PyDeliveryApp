@@ -247,6 +247,13 @@ def search():
     return render_template('search_results.html', menu_items=menu_items, restaurants=restaurants, query=query)
 
 
+@app.context_processor
+def inject_unread_notifications():
+    if current_user.is_authenticated:
+        unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+        return dict(unread_notifications=unread_count)
+    return dict(unread_notifications=0)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
