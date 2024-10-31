@@ -33,7 +33,15 @@
     <h2>المطاعم المتاحة:</h2>
     <ul>
         {% for restaurant in restaurants %}
-            <li><a href="{{ url_for('restaurant_menu', restaurant_id=restaurant.id) }}">{{ restaurant.name }}</a></li>
+            <li>
+                <a href="{{ url_for('restaurant_menu', restaurant_id=restaurant.id) }}">
+                    {{ restaurant.name }}
+                </a>
+                {% if restaurant.image_url %}
+                    <br>
+                    <img src="{{ url_for('static', filename=restaurant.image_url) }}" alt="صورة {{ restaurant.name }}" width="100">
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 </body>

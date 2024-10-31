@@ -16,6 +16,7 @@ class Restaurant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     address = db.Column(db.String(200), nullable=False)
+    image_url = db.Column(db.String(300))
     menu = db.relationship('MenuItem', backref='restaurant', lazy=True)
 
     def __repr__(self):
@@ -26,6 +27,7 @@ class MenuItem(db.Model):
     name = db.Column(db.String(150), nullable=False)
     price = db.Column(db.Float, nullable=False)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
+    image_url = db.Column(db.String(300))
 
     def __repr__(self):
         return f'<MenuItem {self.name}>'

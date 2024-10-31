@@ -37,6 +37,11 @@
         .add-review-link:hover {
             text-decoration: underline;
         }
+        .menu-item img {
+            max-width: 150px;
+            display: block;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +51,11 @@
         <div class="menu-item">
             <h2>{{ menu_item.name }}</h2>
             <p>الثمن: {{ menu_item.price }} درهم</p>
+
+            <!-- عرض صورة الطبق إذا كانت متاحة -->
+            {% if menu_item.image_url %}
+                <img src="{{ url_for('static', filename=menu_item.image_url) }}" alt="صورة {{ menu_item.name }}">
+            {% endif %}
 
             <!-- رابط إضافة تقييم جديد -->
             <a href="{{ url_for('add_dish_review', menu_item_id=menu_item.id) }}" class="add-review-link">إضافة تقييم</a>

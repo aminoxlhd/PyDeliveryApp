@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -11,6 +11,7 @@ import email_validator
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import abort
 from functools import wraps
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
@@ -262,6 +263,39 @@ def inject_unread_notifications():
         unread_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
         return dict(unread_notifications=unread_count)
     return dict(unread_notifications=0)
+
+
+def save_image(image_file):
+    filename = secure_filename(image_file.filename)
+    image_path = os.path.join(current_app.root_path, 'static/images', filename)
+    image_file.save(image_path)
+    return f'images/{filename}'
+
+@app.route('/add_restaurant', methods=['GET', 'POST'])
+@login_required
+def add_restaurant():
+    form = RestaurantForm()
+    if form.validate_on_submit():
+        image_url = save_image(form.image.data) if form.image.data else None
+        new_restaurant = Restaurant(name=form.name.data, address=form.address.data, image_url=image_url)
+        db.session.add(new_restaurant)
+        db.session.commit()
+        flash('تم إضافة المطعم بنجاح!', 'success')
+        return redirect(url_for('home'))
+    return render_template('add_restaurant.html', form=form)
+
+@app.route('/add_menu_item', methods=['GET', 'POST'])
+@login_required
+def add_menu_item():
+    form = MenuItemForm()
+    if form.validate_on_submit():
+        image_url = save_image(form.image.data) if form.image.data else None
+        new_menu_item = MenuItem(name=form.name.data, price=form.price.data, restaurant_id=form.restaurant_id.data, image_url=image_url)
+        db.session.add(new_menu_item)
+        db.session.commit()
+        flash('تم إضافة الطبق بنجاح!', 'success')
+        return redirect(url_for('home'))
+    return render_template('add_menu_item.html', form=form)
 
 
 if __name__ == '__main__':
