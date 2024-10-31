@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <!-- مربع البحث -->
+    <form action="{{ url_for('search') }}" method="get">
+        <input type="text" name="query" placeholder="ابحث عن طبق أو مطعم">
+        <button type="submit">بحث</button>
+    </form>
+
     <h1>مرحبا بك فـ PyDeliveryApp!</h1>
     {% if current_user.is_authenticated %}
         <p>مرحبا {{ current_user.username }}! <a href="{{ url_for('logout') }}">تسجيل الخروج</a></p>

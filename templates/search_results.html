@@ -1,0 +1,25 @@
+<!-- templates/search_results.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>نتائج البحث</title>
+</head>
+<body>
+    <h1>نتائج البحث عن "{{ query }}"</h1>
+
+    <h2>الأطباق</h2>
+    <ul>
+        {% for item in menu_items %}
+            <li>{{ item.name }} - {{ item.price }} درهم</li>
+        {% endfor %}
+    </ul>
+
+    <h2>المطاعم</h2>
+    <ul>
+        {% for restaurant in restaurants %}
+            <li>{{ restaurant.name }} - {{ restaurant.address }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

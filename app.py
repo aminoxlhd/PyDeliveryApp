@@ -165,11 +165,20 @@ def update_order_status(order_id):
     if new_status in ['في الانتظار', 'قيد التحضير', 'تم التوصيل']:
         order.status = new_status
         db.session.commit()
+
+        notification = Notification(
+            user_id=order.user_id,
+            message=f'تم تحديث حالة طلبك رقم {order.id} إلى: {new_status}'
+        )
+        db.session.add(notification)
+        db.session.commit()
+
         flash(f'تم تحديث حالة الطلب إلى: {new_status}', 'success')
     else:
         flash('الحالة غير صالحة', 'danger')
 
-    return redirect(url_for('view_orders'))
+    return redirect(url_for('admin_dashboard'))
+
 
 
 @app.route('/menu_item/<int:menu_item_id>/review', methods=['GET', 'POST'])
@@ -228,6 +237,15 @@ def delete_review(review_id):
     db.session.commit()
     flash('تم حذف التقييم بنجاح!', 'success')
     return redirect(url_for('admin_dashboard'))
+
+
+@app.route('/search')
+def search():
+    query = request.args.get('query', '')
+    menu_items = MenuItem.query.filter(MenuItem.name.contains(query)).all()
+    restaurants = Restaurant.query.filter(Restaurant.name.contains(query)).all()
+    return render_template('search_results.html', menu_items=menu_items, restaurants=restaurants, query=query)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

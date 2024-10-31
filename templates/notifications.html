@@ -1,0 +1,16 @@
+<!-- templates/notifications.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>التنبيهات</title>
+</head>
+<body>
+    <h1>التنبيهات</h1>
+    <ul>
+        {% for notification in notifications %}
+            <li>{{ notification.message }} - {{ notification.timestamp.strftime('%Y-%m-%d %H:%M') }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
