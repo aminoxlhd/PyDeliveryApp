@@ -9,6 +9,8 @@ from extensions import db, migrate, login_manager
 import os
 import email_validator
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import abort
+from functools import wraps
 
 
 app = Flask(__name__)
@@ -190,6 +192,42 @@ def add_dish_review(menu_item_id):
 
     return render_template('add_dish_review.html', form=form, menu_item=menu_item)
 
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_admin:
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route('/admin')
+@admin_required
+def admin_dashboard():
+    users = User.query.all()
+    orders = Order.query.all()
+    reviews = Review.query.all()
+    return render_template('admin_dashboard.html', users=users, orders=orders, reviews=reviews)
+
+
+@app.route('/admin/delete_order/<int:order_id>', methods=['POST'])
+@admin_required
+def delete_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    db.session.delete(order)
+    db.session.commit()
+    flash('تم حذف الطلب بنجاح!', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/delete_review/<int:review_id>', methods=['POST'])
+@admin_required
+def delete_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    db.session.delete(review)
+    db.session.commit()
+    flash('تم حذف التقييم بنجاح!', 'success')
+    return redirect(url_for('admin_dashboard'))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,42 @@
+<!-- templates/admin_dashboard.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة تحكم المسؤول</title>
+</head>
+<body>
+    <h1>لوحة تحكم المسؤول</h1>
+
+    <h2>المستخدمون</h2>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.username }} - {{ 'مسؤول' if user.is_admin else 'مستخدم عادي' }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>الطلبات</h2>
+    <ul>
+        {% for order in orders %}
+            <li>
+                طلب رقم {{ order.id }} - {{ order.status }} - المستخدم: {{ order.user_id }}
+                <form action="{{ url_for('delete_order', order_id=order.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('هل أنت متأكد من حذف هذا الطلب؟')">حذف</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>التقييمات</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                تقييم {{ review.rating }} نجوم - الطبق: {{ review.menu_item_id }} - المستخدم: {{ review.user_id }}
+                <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('هل أنت متأكد من حذف هذا التقييم؟')">حذف</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
