@@ -2,23 +2,56 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>تسجيل الدخول</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>تسجيل الدخول - PyDeliveryApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h2>تسجيل الدخول</h2>
-    <form method="POST">
+
+<div class="login-container mt-5">
+    <h2 class="form-title">تسجيل الدخول</h2>
+    <form action="{{ url_for('login') }}" method="POST">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </p>
-        <p>{{ form.submit() }}</p>
+
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="البريد الإلكتروني") }}
+            {% if form.email.errors %}
+                <small class="text-danger">{{ form.email.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", placeholder="كلمة المرور") }}
+            {% if form.password.errors %}
+                <small class="text-danger">{{ form.password.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">تسجيل الدخول</button>
     </form>
-    <p>ما عندكش حساب؟ <a href="{{ url_for('register') }}">سجل هنا</a></p>
+    <p class="text-center mt-3">ليس لديك حساب؟ <a href="{{ url_for('register') }}">إنشاء حساب جديد</a></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
