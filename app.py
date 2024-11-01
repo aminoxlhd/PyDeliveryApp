@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, flash, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from models import User, Restaurant, MenuItem, Order, Review
+from models import User, Restaurant, MenuItem, Order, Review, Notification
 from forms import RegistrationForm, LoginForm, ReviewForm
 from forms import OrderForm
 from extensions import db, migrate, login_manager
@@ -21,7 +21,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 db.init_app(app)
-migrate.init_app(app, db)
+#migrate.init_app(app, db)
+with app.test_request_context():
+    db.create_all()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
@@ -34,6 +36,7 @@ def load_user(user_id):
 def home():
     restaurants = Restaurant.query.all()
     return render_template('home.html', restaurants=restaurants)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

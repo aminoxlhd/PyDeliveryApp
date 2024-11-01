@@ -3,46 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>PyDeliveryApp</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQp1eXIeXlIX3HaZ7xN1mRAEGzZyHiEZFCf5mFKnF5z4gJf5y8" crossorigin="anonymous">
 </head>
-<body>
+<body class="container mt-4">
     <!-- نموذج البحث مع خيارات التصفية -->
-    <form action="{{ url_for('search') }}" method="get">
-        <input type="text" name="query" placeholder="ابحث عن طبق أو مطعم">
-
-        <!-- إضافة خيارات التصفية -->
-        <select name="sort_by">
+    <form action="{{ url_for('search') }}" method="get" class="d-flex mb-4">
+        <input type="text" name="query" class="form-control me-2" placeholder="ابحث عن طبق أو مطعم">
+        <select name="sort_by" class="form-select me-2">
             <option value="name">الاسم</option>
             <option value="price">السعر</option>
             <option value="rating">التقييم</option>
         </select>
-
-        <button type="submit">بحث</button>
+        <button type="submit" class="btn btn-primary">بحث</button>
     </form>
 
-    <h1>مرحبا بك فـ PyDeliveryApp!</h1>
+    <h1 class="mb-4">مرحبا بك فـ PyDeliveryApp!</h1>
     {% if current_user.is_authenticated %}
         <p>مرحبا {{ current_user.username }}!
-            <a href="{{ url_for('logout') }}">تسجيل الخروج</a>
-            | <a href="{{ url_for('notifications') }}">التنبيهات ({{ unread_notifications }})</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-link">تسجيل الخروج</a>
         </p>
     {% else %}
-        <p><a href="{{ url_for('login') }}">تسجيل الدخول</a> | <a href="{{ url_for('register') }}">تسجيل حساب جديد</a></p>
+        <p><a href="{{ url_for('login') }}" class="btn btn-primary me-2">تسجيل الدخول</a> |
+           <a href="{{ url_for('register') }}" class="btn btn-secondary">تسجيل حساب جديد</a></p>
     {% endif %}
 
-    <h2>المطاعم المتاحة:</h2>
-    <ul>
+    <h2 class="my-4">المطاعم المتاحة:</h2>
+    <div class="row">
         {% for restaurant in restaurants %}
-            <li>
-                <a href="{{ url_for('restaurant_menu', restaurant_id=restaurant.id) }}">
-                    {{ restaurant.name }}
-                </a>
-                {% if restaurant.image_url %}
-                    <br>
-                    <img src="{{ url_for('static', filename=restaurant.image_url) }}" alt="صورة {{ restaurant.name }}" width="100">
-                {% endif %}
-            </li>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    {% if restaurant.image_url %}
+                        <img src="{{ url_for('static', filename=restaurant.image_url) }}" class="card-img-top" alt="صورة {{ restaurant.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ restaurant.name }}</h5>
+                        <p class="card-text">{{ restaurant.address }}</p>
+                        <a href="{{ url_for('restaurant_menu', restaurant_id=restaurant.id) }}" class="btn btn-primary">عرض القائمة</a>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 </body>
 </html>
