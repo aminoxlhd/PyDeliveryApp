@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل الطبق</title>
+</head>
+<body>
+    <h1>تعديل الطبق: {{ menu_item.name }}</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        {{ form.name.label }} {{ form.name(size=32) }}<br>
+        {{ form.price.label }} {{ form.price() }}<br>
+        {{ form.image.label }} {{ form.image() }}<br>
+        <button type="submit">حفظ التعديلات</button>
+    </form>
+</body>
+</html>

@@ -301,5 +301,62 @@ def add_menu_item():
     return render_template('add_menu_item.html', form=form)
 
 
+@app.route('/edit_restaurant/<int:restaurant_id>', methods=['GET', 'POST'])
+@login_required
+def edit_restaurant(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    form = RestaurantForm(obj=restaurant)
+
+    if form.validate_on_submit():
+        restaurant.name = form.name.data
+        restaurant.address = form.address.data
+        if form.image.data:
+            restaurant.image_url = save_image(form.image.data)
+        db.session.commit()
+        flash('تم تعديل المطعم بنجاح!', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('edit_restaurant.html', form=form, restaurant=restaurant)
+
+
+@app.route('/delete_restaurant/<int:restaurant_id>', methods=['POST'])
+@login_required
+def delete_restaurant(restaurant_id):
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+    db.session.delete(restaurant)
+    db.session.commit()
+    flash('تم حذف المطعم بنجاح!', 'success')
+    return redirect(url_for('home'))
+
+
+@app.route('/edit_menu_item/<int:menu_item_id>', methods=['GET', 'POST'])
+@login_required
+def edit_menu_item(menu_item_id):
+    menu_item = MenuItem.query.get_or_404(menu_item_id)
+    form = MenuItemForm(obj=menu_item)
+
+    if form.validate_on_submit():
+        menu_item.name = form.name.data
+        menu_item.price = form.price.data
+        if form.image.data:
+            menu_item.image_url = save_image(form.image.data)
+        db.session.commit()
+        flash('تم تعديل الطبق بنجاح!', 'success')
+        return redirect(url_for('restaurant_menu', restaurant_id=menu_item.restaurant_id))
+
+    return render_template('edit_menu_item.html', form=form, menu_item=menu_item)
+
+
+@app.route('/delete_menu_item/<int:menu_item_id>', methods=['POST'])
+@login_required
+def delete_menu_item(menu_item_id):
+    menu_item = MenuItem.query.get_or_404(menu_item_id)
+    db.session.delete(menu_item)
+    db.session.commit()
+    flash('تم حذف الطبق بنجاح!', 'success')
+    return redirect(url_for('restaurant_menu', restaurant_id=menu_item.restaurant_id))
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

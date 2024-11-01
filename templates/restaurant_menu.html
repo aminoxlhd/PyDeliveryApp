@@ -19,6 +19,12 @@
                         <h5 class="card-title">{{ menu_item.name }}</h5>
                         <p class="card-text">الثمن: {{ menu_item.price }} درهم</p>
                         <a href="{{ url_for('add_dish_review', menu_item_id=menu_item.id) }}" class="btn btn-success">إضافة تقييم</a>
+
+                        <!-- أزرار التعديل والحذف للطبق -->
+                        <a href="{{ url_for('edit_menu_item', menu_item_id=menu_item.id) }}" class="btn btn-warning">تعديل</a>
+                        <form action="{{ url_for('delete_menu_item', menu_item_id=menu_item.id) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">حذف</button>
+                        </form>
                     </div>
                     <div class="card-footer">
                         <h6>التقييمات:</h6>
