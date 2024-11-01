@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, current_app
+from flask import Flask, render_template, redirect, url_for, flash, current_app, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -130,27 +130,6 @@ def add_to_order(menu_item_id):
 def view_orders():
     orders = Order.query.filter_by(user_id=current_user.id).all()
     return render_template('orders.html', orders=orders)
-
-
-@app.route('/restaurant/<int:restaurant_id>/review', methods=['GET', 'POST'])
-@login_required
-def add_review(restaurant_id):
-    form = ReviewForm()
-    restaurant = Restaurant.query.get_or_404(restaurant_id)
-
-    if form.validate_on_submit():
-        review = Review(
-            rating=form.rating.data,
-            comment=form.comment.data,
-            user_id=current_user.id,
-            restaurant_id=restaurant_id
-        )
-        db.session.add(review)
-        db.session.commit()
-        flash('تمت إضافة تقييمك بنجاح!', 'success')
-        return redirect(url_for('view_restaurants'))
-
-    return render_template('add_review.html', form=form, restaurant=restaurant)
 
 
 @app.route('/restaurants', methods=['GET'])
@@ -356,6 +335,59 @@ def delete_menu_item(menu_item_id):
     flash('تم حذف الطبق بنجاح!', 'success')
     return redirect(url_for('restaurant_menu', restaurant_id=menu_item.restaurant_id))
 
+
+@app.route('/restaurant/<int:restaurant_id>/review', methods=['GET', 'POST'])
+@login_required
+def add_review(restaurant_id):
+    form = ReviewForm()
+    restaurant = Restaurant.query.get_or_404(restaurant_id)
+
+    if form.validate_on_submit():
+        review = Review(
+            rating=form.rating.data,
+            comment=form.comment.data,
+            user_id=current_user.id,
+            restaurant_id=restaurant_id
+        )
+        db.session.add(review)
+        db.session.commit()
+
+        notification = Notification(
+            user_id=current_user.id,
+            message=f"تم إضافة تقييم جديد في {restaurant.name}."
+        )
+        db.session.add(notification)
+        db.session.commit()
+
+        flash('تمت إضافة تقييمك بنجاح!', 'success')
+        return redirect(url_for('view_restaurants'))
+
+    return render_template('add_review.html', form=form, restaurant=restaurant)
+
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.date_created.desc()).all()
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/notifications/read/<int:notification_id>', methods=['POST'])
+@login_required
+def mark_notification_as_read(notification_id):
+    notification = Notification.query.get_or_404(notification_id)
+    if notification.user_id == current_user.id:
+        notification.is_read = True
+        db.session.commit()
+    return redirect(url_for('notifications'))
+
+
+@app.before_request
+def load_notifications():
+    if current_user.is_authenticated:
+        unread_notifications = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+        g.unread_notifications = unread_notifications
+    else:
+        g.unread_notifications = 0
 
 
 if __name__ == '__main__':

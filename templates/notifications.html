@@ -2,38 +2,21 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>التنبيهات</title>
+    <title>الإشعارات</title>
 </head>
 <body>
-    <h1>التنبيهات</h1>
-
-    <!-- قسم عرض التنبيهات -->
-    <ul id="notifications">
-        <!-- سيتم ملء هذا القسم بالتنبيهات غير المقروءة عبر AJAX -->
+    <h1>الإشعارات</h1>
+    <ul>
+        {% for notification in notifications %}
+            <li>
+                {{ notification.message }} - {{ notification.date_created.strftime('%Y-%m-%d %H:%M') }}
+                {% if not notification.is_read %}
+                    <form action="{{ url_for('mark_notification_as_read', notification_id=notification.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-link">تمت قراءته</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
     </ul>
-
-    <!-- كود الجافاسكريبت لجلب التنبيهات الفورية -->
-    <script>
-        function fetchNotifications() {
-            fetch('/unread_notifications')
-                .then(response => response.json())
-                .then(data => {
-                    let notificationsContainer = document.getElementById('notifications');
-                    notificationsContainer.innerHTML = '';
-
-                    data.forEach(notification => {
-                        let item = document.createElement('li');
-                        item.textContent = `${notification.message} - ${notification.timestamp}`;
-                        notificationsContainer.appendChild(item);
-                    });
-                });
-        }
-
-        // جلب التنبيهات كل 30 ثانية
-        setInterval(fetchNotifications, 30000);
-
-        // استدعاء التنبيهات عند تحميل الصفحة مباشرة
-        fetchNotifications();
-    </script>
 </body>
 </html>
