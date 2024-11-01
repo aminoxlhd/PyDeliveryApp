@@ -21,7 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 db.init_app(app)
-#migrate.init_app(app, db)
+migrate.init_app(app, db)
 with app.test_request_context():
     db.create_all()
 login_manager.init_app(app)
@@ -388,6 +388,26 @@ def load_notifications():
         g.unread_notifications = unread_notifications
     else:
         g.unread_notifications = 0
+
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = ProfileForm(obj=current_user)
+
+    if form.validate_on_submit():
+        if form.email.data != current_user.email:
+            current_user.email = form.email.data
+            flash('تم تحديث البريد الإلكتروني بنجاح', 'success')
+
+        if form.password.data:
+            current_user.password = generate_password_hash(form.password.data)
+            flash('تم تحديث كلمة المرور بنجاح', 'success')
+
+        db.session.commit()
+        return redirect(url_for('profile'))
+
+    return render_template('profile.html', form=form)
 
 
 if __name__ == '__main__':
