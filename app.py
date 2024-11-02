@@ -21,6 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 db.init_app(app)
+migrate = Migrate(app, db, compare_type=True)
 migrate.init_app(app, db)
 with app.test_request_context():
     db.create_all()
