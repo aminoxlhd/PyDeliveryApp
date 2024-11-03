@@ -19,5 +19,15 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+<form method="POST" action="{{ url_for('add_review', restaurant_id=restaurant.id) }}">
+    {{ form.hidden_tag() }}
+    {{ form.rating.label }} {{ form.rating() }}
+    {{ form.service_rating.label }} {{ form.service_rating() }}
+    {{ form.speed_rating.label }} {{ form.speed_rating() }}
+    {{ form.quality_rating.label }} {{ form.quality_rating() }}
+    {{ form.comment.label }} {{ form.comment() }}
+    {{ form.submit() }}
+</form>
+
 </body>
 </html>

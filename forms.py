@@ -41,3 +41,13 @@ class MenuItemForm(FlaskForm):
     name = StringField('اسم الطبق', validators=[DataRequired()])
     price = DecimalField('السعر', validators=[DataRequired()])
     image = FileField('صورة الطبق', validators=[FileAllowed(['jpg', 'png'], 'فقط ملفات jpg و png مسموحة')])
+
+
+class ReviewForm(FlaskForm):
+    rating = IntegerField('التقييم العام', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    service_rating = IntegerField('تقييم الخدمة', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    speed_rating = IntegerField('تقييم السرعة', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    quality_rating = IntegerField('تقييم الجودة', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    comment = TextAreaField('تعليق')
+    submit = SubmitField('إرسال التقييم')
+

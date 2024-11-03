@@ -8,6 +8,15 @@
 <body class="container mt-4">
     <h1 class="mb-4">قائمة الأطباق في {{ restaurant.name }}</h1>
 
+    <!-- عرض التقييمات المتوسطة للمطعم -->
+    <div class="mb-4">
+        <h4>التقييمات المتوسطة للمطعم</h4>
+        <p>التقييم العام: {{ restaurant.average_rating }} نجوم</p>
+        <p>تقييم الخدمة: {{ restaurant.average_service_rating }} نجوم</p>
+        <p>تقييم السرعة: {{ restaurant.average_speed_rating }} نجوم</p>
+        <p>تقييم الجودة: {{ restaurant.average_quality_rating }} نجوم</p>
+    </div>
+
     <div class="row">
         {% for menu_item in menu_items %}
             <div class="col-md-4">
@@ -31,7 +40,11 @@
                         <ul class="list-group list-group-flush">
                             {% for review in reviews[menu_item.id] %}
                                 <li class="list-group-item">
-                                    {{ review.rating }} نجوم - {{ review.comment }}
+                                    <strong>تقييم عام:</strong> {{ review.rating }} نجوم<br>
+                                    <strong>تقييم الخدمة:</strong> {{ review.service_rating }} نجوم<br>
+                                    <strong>تقييم السرعة:</strong> {{ review.speed_rating }} نجوم<br>
+                                    <strong>تقييم الجودة:</strong> {{ review.quality_rating }} نجوم<br>
+                                    <span>{{ review.comment }}</span>
                                     <small class="text-muted">({{ review.date_posted.strftime('%Y-%m-%d') }})</small>
                                 </li>
                             {% endfor %}
