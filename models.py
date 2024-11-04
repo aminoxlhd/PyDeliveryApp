@@ -44,21 +44,6 @@ class Order(db.Model):
         return f'<Order {self.id} - Status: {self.status}>'
 
 
-
-
-
-class DishReview(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    menu_item_id = db.Column(db.Integer, db.ForeignKey('menu_item.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
-    comment = db.Column(db.String(500))
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f'<DishReview {self.rating} stars for menu item {self.menu_item_id}>'
-
-
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
