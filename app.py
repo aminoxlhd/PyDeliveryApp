@@ -1,13 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, flash, current_app, g, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user
 from models import User, Restaurant, MenuItem, Order, Review, Notification
 from forms import RegistrationForm, LoginForm, ReviewForm
-from forms import OrderForm
 from extensions import db, migrate, login_manager
 import os
-import email_validator
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import abort
 from functools import wraps
