@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, current_app, g
+from flask import Flask, render_template, redirect, url_for, flash, current_app, g, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -409,6 +409,75 @@ def profile():
         return redirect(url_for('profile'))
 
     return render_template('profile.html', form=form)
+
+
+@app.route('/restaurants', methods=['GET'])
+def get_restaurants():
+    restaurants = Restaurant.query.all()
+    data = [
+        {
+            "id": restaurant.id,
+            "name": restaurant.name,
+            "address": restaurant.address,
+            "image_url": restaurant.image_url
+        }
+        for restaurant in restaurants
+    ]
+    return jsonify(data), 200
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu', methods=['GET'])
+def get_menu_items(restaurant_id):
+    menu_items = MenuItem.query.filter_by(restaurant_id=restaurant_id).all()
+    data = [
+        {
+            "id": item.id,
+            "name": item.name,
+            "price": item.price,
+            "image_url": item.image_url
+        }
+        for item in menu_items
+    ]
+    return jsonify(data), 200
+
+
+
+@app.route('/menu_item/<int:menu_item_id>/review', methods=['POST'])
+@login_required
+def add_menu_item_review(menu_item_id):
+    form = DishReviewForm()
+    menu_item = MenuItem.query.get_or_404(menu_item_id)
+
+    if form.validate_on_submit():
+        dish_review = DishReview(
+            rating=form.rating.data,
+            comment=form.comment.data,
+            user_id=current_user.id,
+            menu_item_id=menu_item_id
+        )
+        db.session.add(dish_review)
+        db.session.commit()
+        flash('تمت إضافة تقييمك للطبق بنجاح!', 'success')
+        return redirect(url_for('restaurant_menu', restaurant_id=menu_item.restaurant_id))
+
+    return render_template('add_dish_review.html', form=form, menu_item=menu_item)
+
+
+
+@app.route('/orders', methods=['GET'])
+def get_orders():
+    orders = Order.query.filter_by(user_id=current_user.id).all()
+    data = [
+        {
+            "id": order.id,
+            "items": order.items,
+            "total_price": order.total_price,
+            "status": order.status
+        }
+        for order in orders
+    ]
+    return jsonify(data), 200
+
 
 
 if __name__ == '__main__':
