@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, current_app, g, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, current_app, g, jsonify, send_from_directory
 from flask_migrate import Migrate
 from flask_login import login_user, login_required, logout_user, current_user
 from models import User, Restaurant, MenuItem, Order, Review, Notification
@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import abort
 from functools import wraps
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
 
 app = Flask(__name__)
@@ -24,6 +25,7 @@ with app.test_request_context():
     db.create_all()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+CORS(app)
 
 
 @login_manager.user_loader
@@ -475,6 +477,11 @@ def get_orders():
     ]
     return jsonify(data), 200
 
+
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('build/static', filename)
 
 
 if __name__ == '__main__':
