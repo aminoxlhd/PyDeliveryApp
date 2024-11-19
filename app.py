@@ -1,9 +1,8 @@
-from flask import Flask, redirect, url_for, flash, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory
 from flask_migrate import Migrate
 from flask_login import login_user, login_required, logout_user, current_user
 from models import User, Restaurant, MenuItem, Order, Review, Notification
 from extensions import db, migrate, login_manager
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import os
 
@@ -85,7 +84,7 @@ def get_notifications():
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
-    return send_from_directory('build/static', filename)
+    return send_from_directory('client/build/static', filename)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
