@@ -7,7 +7,7 @@ interface Restaurant {
   image_url?: string;
 }
 
-const Restaurants: React.FC = () => {
+const RestaurantsPage: React.FC = () => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   useEffect(() => {
@@ -19,14 +19,14 @@ const Restaurants: React.FC = () => {
 
   return (
     <div>
-      <h2>Available Restaurants</h2>
+      <h2>قائمة المطاعم</h2>
       <div className="restaurant-list">
         {restaurants.map((restaurant) => (
           <div key={restaurant.id} className="restaurant-card">
             <h3>{restaurant.name}</h3>
             <p>{restaurant.address}</p>
             {restaurant.image_url && (
-              <img src={restaurant.image_url} alt={`Image of ${restaurant.name}`} />
+              <img src={restaurant.image_url} alt={`صورة ${restaurant.name}`} />
             )}
           </div>
         ))}
@@ -35,4 +35,5 @@ const Restaurants: React.FC = () => {
   );
 };
 
-export default Restaurants;
+export default RestaurantsPage;
+

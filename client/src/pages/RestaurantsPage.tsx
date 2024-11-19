@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Restaurant {
   id: number;
@@ -11,22 +12,21 @@ const RestaurantsPage: React.FC = () => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   useEffect(() => {
-    fetch('/api/restaurants')
-      .then(response => response.json())
-      .then(data => setRestaurants(data))
+    axios.get('/api/restaurants')
+      .then(response => setRestaurants(response.data))
       .catch(error => console.error('Error fetching restaurants:', error));
   }, []);
 
   return (
     <div>
-      <h2>Available Restaurants</h2>
+      <h1>المطاعم المتاحة</h1>
       <div className="restaurant-list">
         {restaurants.map((restaurant) => (
           <div key={restaurant.id} className="restaurant-card">
             <h3>{restaurant.name}</h3>
             <p>{restaurant.address}</p>
             {restaurant.image_url && (
-              <img src={restaurant.image_url} alt={`Image of ${restaurant.name}`} />
+              <img src={restaurant.image_url} alt={`صورة ${restaurant.name}`} />
             )}
           </div>
         ))}
@@ -36,3 +36,4 @@ const RestaurantsPage: React.FC = () => {
 };
 
 export default RestaurantsPage;
+

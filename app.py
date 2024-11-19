@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='build', static_url_path='/')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pydeliveryapp.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -87,9 +87,12 @@ def get_notifications():
 def static_files(filename):
     return send_from_directory('build/static', filename)
 
-@app.route('/')
-def index():
-    return send_from_directory('build', 'index.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
