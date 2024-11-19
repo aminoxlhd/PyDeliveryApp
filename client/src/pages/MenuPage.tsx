@@ -13,22 +13,22 @@ const MenuPage: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    fetch(`/api/restaurants/${restaurantId}/menu`) // يجب تغيير المسار حسب API الخاص بك
-      .then(response => response.json())
-      .then(data => setMenuItems(data))
-      .catch(error => console.error('Error fetching menu items:', error));
+    fetch(`/api/restaurants/${restaurantId}/menu`)
+      .then((response) => response.json())
+      .then((data) => setMenuItems(data))
+      .catch((error) => console.error('Error fetching menu items:', error));
   }, [restaurantId]);
 
   return (
     <div>
-      <h2>Menu for Restaurant {restaurantId}</h2>
+      <h2>قائمة الأطباق</h2>
       <div className="menu-list">
         {menuItems.map((item) => (
           <div key={item.id} className="menu-card">
             <h3>{item.name}</h3>
-            <p>Price: {item.price} DH</p>
+            <p>السعر: {item.price} درهم</p>
             {item.image_url && (
-              <img src={item.image_url} alt={`Image of ${item.name}`} />
+              <img src={item.image_url} alt={`صورة ${item.name}`} />
             )}
           </div>
         ))}
